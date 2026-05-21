@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+.venv/
+venv/
+
+# Environment files
+.env
+*.env
+!.env.example
+
+# Django
+staticfiles/
+media/
+
+# Node
+node_modules/
+dist/
+
+# IDE
+.idea/workspace.xml
