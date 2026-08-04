@@ -1,8 +1,12 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics, status
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from core.schema import RegisterResponseSerializer
 
 from .serializer import RegisterSerializer, UserMeSerializer, UserSerializer
 
@@ -10,6 +14,7 @@ from .serializer import RegisterSerializer, UserMeSerializer, UserSerializer
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
+    @extend_schema(request=RegisterSerializer, responses={201: RegisterResponseSerializer})
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -28,6 +33,7 @@ class RegisterView(APIView):
 class MeView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserMeSerializer
+    parser_classes = [JSONParser, FormParser, MultiPartParser]
 
     def get_object(self):
         return self.request.user

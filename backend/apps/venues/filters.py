@@ -18,6 +18,10 @@ class VenueFilter(django_filters.FilterSet):
         field_name="features",
         conjoined=False,
     )
+    venue_type = django_filters.ChoiceFilter(
+        field_name="venue_type",
+        choices=Venue.VenueType.choices,
+    )
     min_avg_check = django_filters.NumberFilter(field_name="avg_check", lookup_expr="gte")
     max_avg_check = django_filters.NumberFilter(field_name="avg_check", lookup_expr="lte")
     min_rating = django_filters.NumberFilter(field_name="rating_avg", lookup_expr="gte")

@@ -40,6 +40,25 @@ class UserMeSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "username", "email", "role", "date_joined"]
 
 
+class UserAdminSerializer(serializers.ModelSerializer):
+    """CRUD користувачів для супер-адміна."""
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "role",
+            "phone_number",
+            "is_active",
+            "date_joined",
+        ]
+        read_only_fields = ["id", "username", "date_joined"]
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
     password_confirm = serializers.CharField(write_only=True, min_length=8)

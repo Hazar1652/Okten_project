@@ -1,16 +1,20 @@
 from django.db import IntegrityError, transaction
 from rest_framework import serializers
 
+from apps.common.permissions import is_super_admin
+
 from .models import Complaint, Review
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
+    author_role = serializers.CharField(source="user.role", read_only=True)
+    venue_name = serializers.CharField(source="venue.name", read_only=True)
 
     class Meta:
         model = Review
         fields = [
-            'id', 'user', 'venue', 'rating',
+            'id', 'user', 'author_role', 'venue', 'venue_name', 'rating',
             'text', 'check_amount', 'created_at', 'updated_at',
         ]
         read_only_fields = ['user', 'created_at', 'updated_at']
@@ -38,6 +42,15 @@ class ComplaintSerializer(serializers.ModelSerializer):
         model = Complaint
         fields = ['id', 'review', 'author', 'reason', 'status', 'created_at', 'updated_at']
         read_only_fields = ['author', 'status', 'created_at', 'updated_at']
+
+    def validate_review(self, review):
+        # За ТЗ скаргу подають лише адміни або власник закладу (ресторатор).
+        user = self.context['request'].user
+        if is_super_admin(user) or review.venue.owner_id == user.id:
+            return review
+        raise serializers.ValidationError(
+            'Скаргу може подати лише адміністратор або власник закладу.'
+        )
 
     def create(self, validated_data):
         validated_data['author'] = self.context['request'].user

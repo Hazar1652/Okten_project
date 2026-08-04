@@ -1,14 +1,17 @@
-from django.db.models import Avg, FloatField, Q
+from django.db.models import Avg, FloatField, OuterRef, Q, Subquery
 from django.db.models.expressions import RawSQL
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
 from apps.analytics.services import record_venue_view
 from apps.common.permissions import IsSuperAdmin, VenueObjectPermission, is_super_admin
+
+from apps.reviews.models import Review
 
 from .filters import VenueFilter
 from .models import Tag, Venue, VenueFeature
@@ -38,6 +41,7 @@ class SafeOrderingFilter(OrderingFilter):
 class VenueViewSet(viewsets.ModelViewSet):
     queryset = Venue.objects.select_related("owner").prefetch_related("tags", "features")
     permission_classes = [IsAuthenticatedOrReadOnly, VenueObjectPermission]
+    parser_classes = [JSONParser, FormParser, MultiPartParser]
     filter_backends = [DjangoFilterBackend, SearchFilter, SafeOrderingFilter]
     filterset_class = VenueFilter
     search_fields = ["name", "address"]
@@ -54,7 +58,20 @@ class VenueViewSet(viewsets.ModelViewSet):
         else:
             qs = qs.filter(Q(status=Venue.Status.PUBLISHED) | Q(owner=user))
 
-        qs = qs.annotate(rating_avg=Avg("reviews__rating"))
+        mine = self.request.query_params.get("mine")
+        if mine in ("1", "true", "True"):
+            if user.is_authenticated:
+                qs = qs.filter(owner=user)
+            else:
+                qs = qs.none()
+
+        rating_subquery = (
+            Review.objects.filter(venue_id=OuterRef("pk"))
+            .values("venue_id")
+            .annotate(avg=Avg("rating"))
+            .values("avg")[:1]
+        )
+        qs = qs.annotate(rating_avg=Subquery(rating_subquery))
 
         ref_lat = self.request.query_params.get("ref_lat")
         ref_lng = self.request.query_params.get("ref_lng")

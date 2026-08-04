@@ -2,9 +2,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+    path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     path("api/", include("core.urls")),
     path("api/", include("apps.users.urls")),
     path("api/", include("apps.venues.urls")),
@@ -12,7 +20,9 @@ urlpatterns = [
     path("api/", include("apps.favorites.urls")),
     path("api/", include("apps.news.urls")),
     path("api/", include("apps.hangout.urls")),
+    path("api/", include("apps.messaging.urls")),
     path("api/", include("apps.analytics.urls")),
+    path("api/", include("apps.common.urls")),
 ]
 
 if settings.DEBUG:

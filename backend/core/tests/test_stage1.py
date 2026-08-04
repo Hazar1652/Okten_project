@@ -28,6 +28,7 @@ class NewsFilterTests(APITestCase):
             title="Promo",
             content="x",
             category=News.Category.PROMO,
+            is_paid=True,  # Акції/Події показуються лише за умови оплати (за ТЗ).
             published_at=timezone.now(),
         )
         News.objects.create(
@@ -106,3 +107,80 @@ class AnalyticsTests(APITestCase):
         response = self.client.get(f"/api/analytics/venues/{self.venue.id}/stats/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertGreaterEqual(response.data["total_views"], 1)
+
+
+class VenueCoordsValidationTests(APITestCase):
+    def setUp(self):
+        self.manager = User.objects.create_user(
+            "mgr2", "m2@t.com", "Pass12345!", role=User.Role.VENUE_MANAGER
+        )
+        self.client.force_authenticate(user=self.manager)
+
+    def test_create_lviv_venue_with_matching_coords(self):
+        response = self.client.post(
+            "/api/venues/",
+            {
+                "name": "Lviv Croissants",
+                "address": "проспект Чорновола, 69, Львів",
+                "latitude": "49.839700",
+                "longitude": "24.029700",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["status"], Venue.Status.PENDING)
+
+    def test_create_with_empty_optional_fields(self):
+        response = self.client.post(
+            "/api/venues/",
+            {
+                "name": "Kyiv Cafe",
+                "address": "вул. Хрещатик, 1, Київ",
+                "latitude": "50.450100",
+                "longitude": "30.523400",
+                "email": "",
+                "avg_check": "",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+class NewsOwnershipTests(APITestCase):
+    def setUp(self):
+        self.manager = User.objects.create_user(
+            "mgr3", "m3@t.com", "Pass12345!", role=User.Role.VENUE_MANAGER
+        )
+        self.other = User.objects.create_user(
+            "other", "o2@t.com", "Pass12345!", role=User.Role.VENUE_MANAGER
+        )
+        self.own_venue = Venue.objects.create(
+            owner=self.manager,
+            name="Mine",
+            address="A",
+            latitude=Decimal("50.45"),
+            longitude=Decimal("30.52"),
+            status=Venue.Status.PUBLISHED,
+        )
+        self.foreign_venue = Venue.objects.create(
+            owner=self.other,
+            name="Foreign",
+            address="B",
+            latitude=Decimal("50.46"),
+            longitude=Decimal("30.53"),
+            status=Venue.Status.PUBLISHED,
+        )
+        self.client.force_authenticate(user=self.manager)
+
+    def test_manager_cannot_create_news_for_foreign_venue(self):
+        response = self.client.post(
+            "/api/news/",
+            {
+                "venue": self.foreign_venue.id,
+                "title": "Hack",
+                "content": "x",
+                "category": News.Category.GENERAL,
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

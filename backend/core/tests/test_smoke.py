@@ -101,6 +101,54 @@ class VenueVisibilitySmokeTests(APITestCase):
         self.assertIn("count", response.data)
         self.assertIn("results", response.data)
 
+    def test_venue_owner_field_is_username(self):
+        published = self._create_venue("Owner Pub", Venue.Status.PUBLISHED)
+        response = self.client.get("/api/venues/")
+        item = next(r for r in response.data["results"] if r["id"] == published.id)
+        self.assertEqual(item["owner"], "owner")
+        self.assertIn("main_image_url", item)
+
+    def test_filter_by_tag(self):
+        from apps.venues.models import Tag
+
+        tag, _ = Tag.objects.get_or_create(slug="test-bar", defaults={"name": "Test Bar"})
+        tagged = self._create_venue("Tagged Pub", Venue.Status.PUBLISHED)
+        tagged.tags.add(tag)
+        self._create_venue("Plain Pub", Venue.Status.PUBLISHED)
+
+        response = self.client.get(f"/api/venues/?tags={tag.id}")
+        ids = {item["id"] for item in response.data["results"]}
+        self.assertEqual(ids, {tagged.id})
+
+    def test_mine_filter_returns_only_owner_venues(self):
+        manager = User.objects.create_user(
+            username="mgr_mine",
+            email="mm@t.com",
+            password="StrongPass123!",
+            role=User.Role.VENUE_MANAGER,
+        )
+        other = User.objects.create_user(
+            username="other_mine",
+            email="om@t.com",
+            password="StrongPass123!",
+        )
+        mine = self._create_venue("Mine Pub", Venue.Status.PUBLISHED)
+        mine.owner = manager
+        mine.save(update_fields=["owner"])
+        other_venue = Venue.objects.create(
+            owner=other,
+            name="Other Pub",
+            address="X",
+            latitude=Decimal("50.450100"),
+            longitude=Decimal("30.523400"),
+            status=Venue.Status.PUBLISHED,
+        )
+        self.client.force_authenticate(user=manager)
+        response = self.client.get("/api/venues/?mine=1")
+        ids = {item["id"] for item in response.data["results"]}
+        self.assertIn(mine.id, ids)
+        self.assertNotIn(other_venue.id, ids)
+
 
 class VenueOrderingSmokeTests(APITestCase):
     def setUp(self):
@@ -146,6 +194,32 @@ class DuplicateReviewFavoriteSmokeTests(APITestCase):
         )
         self.client.force_authenticate(user=self.user)
 
+    def test_reviews_list_filtered_by_venue(self):
+        venue_b = Venue.objects.create(
+            owner=self.owner,
+            name="Other",
+            address="Side 2",
+            latitude=Decimal("50.451000"),
+            longitude=Decimal("30.524000"),
+            status=Venue.Status.PUBLISHED,
+        )
+        Review.objects.create(
+            user=self.user,
+            venue=self.venue,
+            rating=5,
+            text="For pub",
+        )
+        Review.objects.create(
+            user=self.owner,
+            venue=venue_b,
+            rating=4,
+            text="For other",
+        )
+        only_pub = self.client.get(f"/api/reviews/?venue={self.venue.id}")
+        self.assertEqual(only_pub.status_code, status.HTTP_200_OK)
+        self.assertEqual(only_pub.data["count"], 1)
+        self.assertEqual(only_pub.data["results"][0]["venue"], self.venue.id)
+
     def test_duplicate_review_returns_validation_error(self):
         payload = {
             "venue": self.venue.id,
@@ -168,3 +242,16 @@ class DuplicateReviewFavoriteSmokeTests(APITestCase):
         self.assertEqual(second.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("non_field_errors", second.data)
         self.assertEqual(Favorite.objects.filter(user=self.user, venue=self.venue).count(), 1)
+
+    def test_mine_filter_returns_only_own_reviews(self):
+        self.client.force_authenticate(user=self.user)
+        Review.objects.create(
+            user=self.user,
+            venue=self.venue,
+            rating=5,
+            text="My review",
+        )
+        response = self.client.get("/api/reviews/?mine=1")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(response.data["results"][0]["text"], "My review")

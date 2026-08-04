@@ -31,13 +31,28 @@ class Venue(TimestampedModel):
         PUBLISHED = 'published', 'Published'
         REJECTED = 'rejected', 'Rejected'
         ARCHIVED = 'archived', 'Archived'
-    
+
+    class VenueType(models.TextChoices):
+        BAR = 'bar', 'Бар'
+        PUB = 'pub', 'Паб'
+        RESTAURANT = 'restaurant', 'Ресторан'
+        CAFE = 'cafe', 'Кафе'
+        COFFEE = 'coffee', "Кав'ярня"
+        CLUB = 'club', 'Нічний клуб'
+        OTHER = 'other', 'Інше'
+
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='venues',
     )
     name = models.CharField(max_length=100)
+    venue_type = models.CharField(
+        max_length=20,
+        choices=VenueType.choices,
+        default=VenueType.OTHER,
+        blank=True,
+    )
     description = models.TextField(blank=True)
     address = models.CharField(max_length=100)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)

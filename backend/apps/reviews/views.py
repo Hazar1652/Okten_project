@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
@@ -6,6 +7,7 @@ from apps.common.permissions import IsSuperAdmin, ReviewObjectPermission, is_sup
 
 from apps.venues.models import Venue
 
+from .filters import ReviewFilter
 from .models import Complaint, Review
 from .serializer import (
     ComplaintModerationSerializer,
@@ -15,9 +17,11 @@ from .serializer import (
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
-    queryset = Review.objects.select_related("user", "venue")
+    queryset = Review.objects.select_related("user", "venue").order_by("-created_at")
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, ReviewObjectPermission]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ReviewFilter
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -27,6 +31,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
             return qs.filter(published)
         if is_super_admin(user):
             return qs
+
+        mine = self.request.query_params.get("mine")
+        if mine in ("1", "true", "True") and user.is_authenticated:
+            return qs.filter(user=user)
+
         return qs.filter(published | Q(venue__owner=user))
 
 

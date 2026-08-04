@@ -81,9 +81,27 @@ class NewsObjectPermission(BasePermission):
 
 
 class HangoutObjectPermission(BasePermission):
+    """
+    Читання: відкрита зустріч у published-закладі — усі; свої — автор; решта — адмін.
+    Зміна: автор або super_admin.
+    """
+
     def has_object_permission(self, request, view, obj):
+        from apps.hangout.models import Hangout
+        from apps.venues.models import Venue
+
         if request.method in SAFE_METHODS:
-            return True
+            if is_super_admin(request.user):
+                return True
+            if request.user.is_authenticated and obj.author_id == request.user.id:
+                return True
+            if (
+                obj.status == Hangout.Status.OPEN
+                and obj.venue.status == Venue.Status.PUBLISHED
+            ):
+                return True
+            return False
+
         if not request.user.is_authenticated:
             return False
         if is_super_admin(request.user):

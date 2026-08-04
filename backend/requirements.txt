@@ -3,7 +3,10 @@ djangorestframework
 django-cors-headers
 django-filter
 djangorestframework-simplejwt
+drf-spectacular
 gunicorn
 psycopg2-binary
 python-dotenv
 Pillow
+requests
+whitenoise
