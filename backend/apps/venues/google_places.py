@@ -1,5 +1,3 @@
-"""Клієнт Google Places API (New). Ключ лише на сервері."""
-
 from __future__ import annotations
 
 import logging
@@ -17,14 +15,11 @@ PLACES_BASE = "https://places.googleapis.com/v1"
 AUTOCOMPLETE_TIMEOUT = 8
 DETAILS_TIMEOUT = 10
 
-
 class PlacesNotConfigured(Exception):
     pass
 
-
 class PlacesAPIError(Exception):
     pass
-
 
 def _api_key() -> str:
     key = getattr(settings, "GOOGLE_PLACES_API_KEY", "") or ""
@@ -34,7 +29,6 @@ def _api_key() -> str:
         )
     return key.strip()
 
-
 def _headers(field_mask: str | None = None) -> dict[str, str]:
     headers = {
         "X-Goog-Api-Key": _api_key(),
@@ -43,7 +37,6 @@ def _headers(field_mask: str | None = None) -> dict[str, str]:
     if field_mask:
         headers["X-Goog-FieldMask"] = field_mask
     return headers
-
 
 def _humanize_places_error(status_code: int, message: str) -> str:
     lowered = (message or "").lower()
@@ -58,7 +51,6 @@ def _humanize_places_error(status_code: int, message: str) -> str:
         return "Увімкни білінг у Google Cloud для цього проєкту."
     return message or f"Помилка Google Places ({status_code})"
 
-
 def _raise_for_status(response: requests.Response) -> None:
     if response.ok:
         return
@@ -70,9 +62,7 @@ def _raise_for_status(response: requests.Response) -> None:
     logger.warning("Google Places API error %s: %s", response.status_code, message)
     raise PlacesAPIError(_humanize_places_error(response.status_code, message))
 
-
 def autocomplete(input_text: str, session_token: str = "") -> list[dict[str, Any]]:
-    """Підказки адрес/закладів для поля пошуку."""
     text = (input_text or "").strip()
     if len(text) < 2:
         return []
@@ -115,9 +105,7 @@ def autocomplete(input_text: str, session_token: str = "") -> list[dict[str, Any
         )
     return suggestions
 
-
 def place_details(place_id: str, session_token: str = "") -> dict[str, Any]:
-    """Деталі місця для автозаповнення форми закладу."""
     pid = (place_id or "").strip()
     if not pid:
         raise PlacesAPIError("place_id обовʼязковий")

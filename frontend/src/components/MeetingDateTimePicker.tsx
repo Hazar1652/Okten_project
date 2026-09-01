@@ -33,7 +33,6 @@ interface Props {
   onTimeChange: (value: string) => void
 }
 
-/** Календар + список часу замість ручного вводу цифр. Не дає обрати минуле. */
 export default function MeetingDateTimePicker({
   date,
   time,

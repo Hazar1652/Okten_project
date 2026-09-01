@@ -1,8 +1,33 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import ConversationViewSet
+from .views import (
+    ConversationDetailView,
+    ConversationListCreateView,
+    ConversationMessagesView,
+    ConversationReadView,
+    ConversationUnreadCountView,
+)
 
-router = DefaultRouter()
-router.register("conversations", ConversationViewSet, basename="conversations")
-
-urlpatterns = router.urls
+urlpatterns = [
+    path("conversations/", ConversationListCreateView.as_view(), name="conversations-list"),
+    path(
+        "conversations/unread-count/",
+        ConversationUnreadCountView.as_view(),
+        name="conversations-unread-count",
+    ),
+    path(
+        "conversations/<int:pk>/",
+        ConversationDetailView.as_view(),
+        name="conversations-detail",
+    ),
+    path(
+        "conversations/<int:pk>/messages/",
+        ConversationMessagesView.as_view(),
+        name="conversations-messages",
+    ),
+    path(
+        "conversations/<int:pk>/read/",
+        ConversationReadView.as_view(),
+        name="conversations-read",
+    ),
+]

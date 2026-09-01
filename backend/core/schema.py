@@ -1,23 +1,19 @@
 from rest_framework import serializers
 
-from apps.users.serializer import UserSerializer
-
+from apps.users.serializers import UserSerializer
 
 class HealthCheckSerializer(serializers.Serializer):
     status = serializers.CharField()
     service = serializers.CharField()
-
 
 class RegisterResponseSerializer(serializers.Serializer):
     user = UserSerializer()
     access = serializers.CharField()
     refresh = serializers.CharField()
 
-
 class VenueViewsByDaySerializer(serializers.Serializer):
     date = serializers.CharField()
     count = serializers.IntegerField()
-
 
 class VenueStatsSerializer(serializers.Serializer):
     venue_id = serializers.IntegerField()

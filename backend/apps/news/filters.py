@@ -4,10 +4,7 @@ from django.utils import timezone
 
 from .models import News
 
-
 class NewsFilter(django_filters.FilterSet):
-    """Фільтри для GET /api/news/?category=promo&is_published=true"""
-
     category = django_filters.ChoiceFilter(choices=News.Category.choices)
     venue = django_filters.NumberFilter(field_name="venue_id")
     is_published = django_filters.BooleanFilter(method="filter_is_published")

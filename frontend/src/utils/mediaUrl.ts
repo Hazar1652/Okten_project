@@ -1,4 +1,3 @@
-/** URL фото з API (absolute або /media/...) для dev через Vite proxy. */
 export function resolveMediaUrl(url: string | null | undefined): string | null {
   if (!url) return null
   if (url.startsWith('http://') || url.startsWith('https://')) {

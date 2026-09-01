@@ -1,8 +1,6 @@
 import type { Tag, VenueFeature, VenueListParams } from '../types/api'
 import { VENUE_TYPES } from '../utils/venueTypes'
 
-
-
 export type VenueFilterState = {
 
   tagIds: number[]
@@ -20,8 +18,6 @@ export type VenueFilterState = {
   ordering: string
 
 }
-
-
 
 export const emptyVenueFilters: VenueFilterState = {
 
@@ -41,11 +37,7 @@ export const emptyVenueFilters: VenueFilterState = {
 
 }
 
-
-
 type GeoRef = { lat: number; lng: number } | null
-
-
 
 type Props = {
 
@@ -68,8 +60,6 @@ type Props = {
   locating: boolean
 
 }
-
-
 
 export function venueFiltersToParams(
 
@@ -111,8 +101,6 @@ export function venueFiltersToParams(
 
 }
 
-
-
 export default function VenueFilters({
 
   tags,
@@ -147,8 +135,6 @@ export default function VenueFilters({
 
   }
 
-
-
   const toggleFeature = (id: number) => {
 
     const featureIds = filters.featureIds.includes(id)
@@ -160,8 +146,6 @@ export default function VenueFilters({
     onChange({ ...filters, featureIds })
 
   }
-
-
 
   const onOrderingChange = (ordering: string) => {
 
@@ -175,15 +159,11 @@ export default function VenueFilters({
 
   }
 
-
-
   return (
 
     <div className="filter-panel">
 
       <h3 className="filter-panel-title">Фільтри</h3>
-
-
 
       {tags.length > 0 && (
 
@@ -219,8 +199,6 @@ export default function VenueFilters({
 
       )}
 
-
-
       {features.length > 0 && (
 
         <div className="filter-group">
@@ -254,8 +232,6 @@ export default function VenueFilters({
         </div>
 
       )}
-
-
 
       <div className="filter-row">
 
@@ -373,8 +349,6 @@ export default function VenueFilters({
 
       </div>
 
-
-
       {filters.ordering === 'distance_km' && (
 
         <p className="muted" style={{ margin: '0 0 0.75rem', fontSize: '0.9rem' }}>
@@ -412,8 +386,6 @@ export default function VenueFilters({
         </p>
 
       )}
-
-
 
       <div className="filter-actions">
 

@@ -7,19 +7,18 @@ from rest_framework.test import APITestCase
 
 User = get_user_model()
 
-
 class PlacesAPITests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user("u1", "u1@t.com", "Pass12345!")
         self.client.force_authenticate(user=self.user)
 
-    @patch("apps.venues.places_views.autocomplete")
+    @patch("apps.venues.views.places_autocomplete.autocomplete")
     def test_autocomplete_requires_auth_off_for_anon(self, mock_auto):
         self.client.force_authenticate(user=None)
         response = self.client.get("/api/places/autocomplete/?q=lviv")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @patch("apps.venues.places_views.autocomplete")
+    @patch("apps.venues.views.places_autocomplete.autocomplete")
     def test_autocomplete_returns_suggestions(self, mock_auto):
         mock_auto.return_value = [
             {"place_id": "ChIJx", "description": "Lviv", "main_text": "Lviv", "secondary_text": "UA"}
@@ -47,7 +46,7 @@ class PlacesAPITests(APITestCase):
         self.assertEqual(data["latitude"], "49.840319")
         self.assertEqual(data["longitude"], "24.027719")
 
-    @patch("apps.venues.places_views.place_details")
+    @patch("apps.venues.views.places_details.place_details")
     def test_details_returns_normalized_payload(self, mock_details):
         mock_details.return_value = {
             "place_id": "ChIJx",

@@ -5,7 +5,6 @@ from apps.common.models import TimestampedModel
 from apps.hangout.models import Hangout
 from apps.venues.models import Venue
 
-
 class Conversation(TimestampedModel):
     class Kind(models.TextChoices):
         VENUE = "venue", "Venue"
@@ -50,7 +49,6 @@ class Conversation(TimestampedModel):
     def __str__(self):
         return f"{self.kind}#{self.pk}"
 
-
 class ConversationParticipant(models.Model):
     conversation = models.ForeignKey(
         Conversation,
@@ -76,7 +74,6 @@ class ConversationParticipant(models.Model):
 
     def __str__(self):
         return f"{self.user_id} in {self.conversation_id}"
-
 
 class Message(models.Model):
     conversation = models.ForeignKey(

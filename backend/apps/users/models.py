@@ -2,7 +2,6 @@ from django.db import models
 from apps.common.models import TimestampedModel
 from django.contrib.auth.models import AbstractUser
 
-
 class User(AbstractUser, TimestampedModel):
     class Role(models.TextChoices):
         USER = 'user', 'User'

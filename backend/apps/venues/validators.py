@@ -17,13 +17,11 @@ NON_KYIV_ADDRESS_MARKERS = (
     "zaporizh",
 )
 
-
 def coords_match_demo_defaults(latitude: Decimal, longitude: Decimal) -> bool:
     return (
         abs(latitude - DEMO_LATITUDE) <= COORD_TOLERANCE
         and abs(longitude - DEMO_LONGITUDE) <= COORD_TOLERANCE
     )
-
 
 def address_suggests_non_kyiv(address: str) -> bool:
     normalized = (address or "").lower()

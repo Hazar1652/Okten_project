@@ -151,7 +151,7 @@ export default function VenuePage() {
   if (error || !venue) return <p className="error">{error || 'Помилка'}</p>
 
   const coverSrc = resolveMediaUrl(venue.main_image_url)
-  // За ТЗ скаргу на відгук залишають лише адміни або власник закладу (ресторатор).
+
   const canComplain = isSuperAdmin || user?.username === venue.owner
 
   return (

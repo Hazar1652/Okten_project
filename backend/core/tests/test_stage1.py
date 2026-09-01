@@ -11,7 +11,6 @@ from apps.venues.models import Venue
 
 User = get_user_model()
 
-
 class NewsFilterTests(APITestCase):
     def setUp(self):
         owner = User.objects.create_user("owner", "o@t.com", "Pass12345!")
@@ -51,7 +50,6 @@ class NewsFilterTests(APITestCase):
         self.assertIn("Promo", titles)
         self.assertNotIn("Draft", titles)
 
-
 class VenueModerationTests(APITestCase):
     def setUp(self):
         self.admin = User.objects.create_user(
@@ -81,7 +79,6 @@ class VenueModerationTests(APITestCase):
         response = self.client.post(f"/api/venues/{self.venue.id}/approve/", {}, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-
 class AnalyticsTests(APITestCase):
     def setUp(self):
         owner = User.objects.create_user("o", "o@t.com", "Pass12345!")
@@ -107,7 +104,6 @@ class AnalyticsTests(APITestCase):
         response = self.client.get(f"/api/analytics/venues/{self.venue.id}/stats/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertGreaterEqual(response.data["total_views"], 1)
-
 
 class VenueCoordsValidationTests(APITestCase):
     def setUp(self):
@@ -144,7 +140,6 @@ class VenueCoordsValidationTests(APITestCase):
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
 
 class NewsOwnershipTests(APITestCase):
     def setUp(self):

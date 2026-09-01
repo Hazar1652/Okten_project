@@ -1,18 +1,15 @@
 from django.contrib import admin
 from .models import Tag, Venue, VenueFeature
 
-
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "slug")
     search_fields = ("name", "slug")
 
-
 @admin.register(VenueFeature)
 class VenueFeatureAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "slug")
     search_fields = ("name", "slug")
-
 
 @admin.register(Venue)
 class VenueAdmin(admin.ModelAdmin):

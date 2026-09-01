@@ -6,7 +6,6 @@ from rest_framework.test import APIClient
 
 User = get_user_model()
 
-
 @override_settings(
     GOOGLE_OAUTH_CLIENT_ID="google-client-id.apps.googleusercontent.com",
     FACEBOOK_APP_ID="987654321098765",

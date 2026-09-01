@@ -4,7 +4,6 @@ from rest_framework.views import APIView
 
 from .schema import HealthCheckSerializer
 
-
 class HealthCheckView(APIView):
     authentication_classes = []
     permission_classes = []

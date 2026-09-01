@@ -1,6 +1,5 @@
 import type { User } from '../types/api'
 
-/** Ім'я для шапки/профілю — не показувати сирий Google sub. */
 export function displayName(user: Pick<User, 'username' | 'email' | 'first_name' | 'last_name'> | null | undefined): string {
   if (!user) return ''
   const full = [user.first_name, user.last_name].filter(Boolean).join(' ').trim()

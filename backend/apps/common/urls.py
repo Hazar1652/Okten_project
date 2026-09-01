@@ -1,12 +1,23 @@
-from django.urls import include, path
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .cms_views import SitePageViewSet, TopCategoryViewSet
-
-router = DefaultRouter()
-router.register("pages", SitePageViewSet, basename="site-pages")
-router.register("top-categories", TopCategoryViewSet, basename="top-categories")
+from .views import (
+    SitePageDetailView,
+    SitePageListView,
+    TopCategoryDetailView,
+    TopCategoryListCreateView,
+)
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path("pages/", SitePageListView.as_view(), name="site-pages-list"),
+    path("pages/<slug:slug>/", SitePageDetailView.as_view(), name="site-pages-detail"),
+    path(
+        "top-categories/",
+        TopCategoryListCreateView.as_view(),
+        name="top-categories-list",
+    ),
+    path(
+        "top-categories/<int:pk>/",
+        TopCategoryDetailView.as_view(),
+        name="top-categories-detail",
+    ),
 ]

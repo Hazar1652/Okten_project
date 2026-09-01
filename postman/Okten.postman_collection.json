@@ -1,0 +1,2507 @@
+{
+  "info": {
+    "_postman_id": "6ae09cfb-f922-43fa-ab16-8dffadc9c486",
+    "name": "Okten",
+    "description": "Okten API — заклади, відгуки, «Пиячок», повідомлення, CMS.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49086709",
+    "_collection_link": "https://go.postman.co/collection/49086709-6ae09cfb-f922-43fa-ab16-8dffadc9c486?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Tokens returned', () => { pm.expect(data).to.have.property('access'); pm.expect(data).to.have.property('refresh'); });",
+              "pm.collectionVariables.set('access_token', data.access);",
+              "pm.collectionVariables.set('refresh_token', data.refresh);",
+              "pm.collectionVariables.set('user_id', data.user.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"demo_user\",\n  \"email\": \"demo@example.com\",\n  \"password\": \"DemoPass123!\",\n  \"password_confirm\": \"DemoPass123!\",\n  \"first_name\": \"Demo\",\n  \"last_name\": \"User\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Access token returned', () => pm.expect(data.access).to.be.a('string'));",
+              "pm.collectionVariables.set('access_token', data.access);",
+              "pm.collectionVariables.set('refresh_token', data.refresh);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"demo_user\",\n  \"password\": \"DemoPass123!\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/token",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "refresh_token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('access_token', data.access);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/token/refresh",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "token",
+            "refresh"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "post_venue",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Created as pending', () => pm.expect(data.status).to.eql('pending'));",
+              "pm.collectionVariables.set('venue_id', data.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Demo Bar\",\n  \"venue_type\": \"bar\",\n  \"description\": \"Затишний бар у центрі міста\",\n  \"address\": \"вул. Хрещатик, 1, Київ\",\n  \"latitude\": 50.4501,\n  \"longitude\": 30.5234,\n  \"phone_number\": \"+380501112233\",\n  \"email\": \"bar@example.com\",\n  \"website\": \"https://demo-bar.example.com\",\n  \"avg_check\": 450.0,\n  \"work_time\": {\n    \"mon\": \"10:00-23:00\",\n    \"sun\": \"12:00-22:00\"\n  },\n  \"tag_ids\": [],\n  \"feature_ids\": []\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/venues",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "venues"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "submit_venue",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Pending', () => pm.expect(data.status).to.eql('pending'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/venues/{{venue_id}}/submit",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "venues",
+            "{{venue_id}}",
+            "submit"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "approve_venue",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Published', () => pm.expect(data.status).to.eql('published'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/venues/{{venue_id}}/approve",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "venues",
+            "{{venue_id}}",
+            "approve"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "reject_venue",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Rejected', () => pm.expect(data.status).to.eql('rejected'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/venues/{{venue_id}}/reject",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "venues",
+            "{{venue_id}}",
+            "reject"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "post_review",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('review_id', data.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"venue\": \"{{venue_id}}\",\n  \"rating\": 5,\n  \"text\": \"Чудовий сервіс і атмосфера, рекомендую!\",\n  \"check_amount\": 800.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/reviews",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "reviews"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "post_complaint",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('complaint_id', data.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"review\": \"{{review_id}}\",\n  \"reason\": \"Некоректний зміст відгуку\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/complaints",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "complaints"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "post_favorite",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('favorite_id', data.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"venue_id\": \"{{venue_id}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/favorites",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "favorites"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "post_news",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('news_id', data.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"venue\": \"{{venue_id}}\",\n  \"title\": \"Знижка на коктейлі\",\n  \"content\": \"Щочетверга усі коктейлі зі знижкою 20%.\",\n  \"category\": \"promo\",\n  \"is_paid\": false,\n  \"published_at\": \"2026-09-01T12:00:00Z\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/news",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "news"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "post_hangout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Open', () => pm.expect(data.status).to.eql('open'));",
+              "pm.collectionVariables.set('hangout_id', data.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"venue\": \"{{venue_id}}\",\n  \"meeting_date\": \"2026-12-01T19:00:00Z\",\n  \"meeting_time\": \"19:00:00\",\n  \"goal_description\": \"Шукаю компанію на бокал вина у п'ятницю ввечері.\",\n  \"contact_me\": true,\n  \"gender_preferences\": \"any\",\n  \"people_count\": 3,\n  \"payer_type\": \"split\",\n  \"budget_min\": 300,\n  \"budget_max\": 800\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/hangouts",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "hangouts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "cancel_hangout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Cancelled', () => pm.expect(data.status).to.eql('cancelled'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/hangouts/{{hangout_id}}/cancel",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "hangouts",
+            "{{hangout_id}}",
+            "cancel"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "close_hangout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Closed', () => pm.expect(data.status).to.eql('closed'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/hangouts/{{hangout_id}}/close",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "hangouts",
+            "{{hangout_id}}",
+            "close"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "post_conversation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('conversation_id', data.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kind\": \"venue\",\n  \"venue_id\": \"{{venue_id}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/conversations",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "conversations"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "post_message",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Body saved', () => pm.expect(data.body).to.be.a('string'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"body\": \"Вітаю! Чи можна забронювати столик на вечір?\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/conversations/{{conversation_id}}/messages",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "conversations",
+            "{{conversation_id}}",
+            "messages"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "read_conversation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Ok flag', () => pm.expect(data.ok).to.be.true);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/conversations/{{conversation_id}}/read",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "conversations",
+            "{{conversation_id}}",
+            "read"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "post_top_category",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('top_category_id', data.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Бари\",\n  \"tag_id\": \"{{tag_id}}\",\n  \"order\": 1,\n  \"is_active\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/top-categories",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "top-categories"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "patch_me",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Name updated', () => pm.expect(data.first_name).to.eql('Updated'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Updated\",\n  \"last_name\": \"Name\",\n  \"phone_number\": \"+380501112233\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/users/me",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "admin_patch_user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"role\": \"user\",\n  \"is_active\": true,\n  \"phone_number\": \"+380501112233\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/users/admin/{{user_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users",
+            "admin",
+            "{{user_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "patch_venue",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Renamed', () => pm.expect(data.name).to.eql('Demo Bar Updated'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Demo Bar Updated\",\n  \"description\": \"Оновлений опис закладу\",\n  \"avg_check\": 500.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/venues/{{venue_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "venues",
+            "{{venue_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "patch_review",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rating\": 4,\n  \"text\": \"Оновлений відгук після другого візиту.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/reviews/{{review_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "reviews",
+            "{{review_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "patch_complaint_status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"in_progress\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/complaints/{{complaint_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "complaints",
+            "{{complaint_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "patch_news",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Оновлена акція\",\n  \"content\": \"Знижка діє також у п'ятницю.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/news/{{news_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "news",
+            "{{news_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "patch_hangout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"people_count\": 4,\n  \"goal_description\": \"Збільшили компанію до чотирьох осіб, чекаємо на вас.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/hangouts/{{hangout_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "hangouts",
+            "{{hangout_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "patch_top_category",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Бари та паби\",\n  \"order\": 2,\n  \"is_active\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/top-categories/{{top_category_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "top-categories",
+            "{{top_category_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "admin_delete_user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 204', () => pm.expect([204]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users/admin/{{user_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users",
+            "admin",
+            "{{user_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "admin_hard_delete_user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 204', () => pm.expect([204]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users/admin/{{user_id}}/hard-delete",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users",
+            "admin",
+            "{{user_id}}",
+            "hard-delete"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete_venue",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 204', () => pm.expect([204]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/venues/{{venue_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "venues",
+            "{{venue_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete_review",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 204', () => pm.expect([204]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/reviews/{{review_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "reviews",
+            "{{review_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete_favorite",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 204', () => pm.expect([204]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/favorites/{{favorite_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "favorites",
+            "{{favorite_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete_news",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 204', () => pm.expect([204]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/news/{{news_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "news",
+            "{{news_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete_hangout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 204', () => pm.expect([204]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/hangouts/{{hangout_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "hangouts",
+            "{{hangout_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete_top_category",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 204', () => pm.expect([204]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/top-categories/{{top_category_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "top-categories",
+            "{{top_category_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "health",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Status ok', () => pm.expect(data.status).to.eql('ok'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "oauth_config",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/auth/oauth-config",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "oauth-config"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "me",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.collectionVariables.set('user_id', data.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users/me",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "admin_users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Paginated', () => pm.expect(data.results).to.be.an('array'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users/admin",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users",
+            "admin"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "admin_user_by_id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users/admin/{{user_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users",
+            "admin",
+            "{{user_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_venues",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Paginated', () => pm.expect(data.results).to.be.an('array'));",
+              "if (data.results.length) {",
+              "    pm.collectionVariables.set('venue_id', data.results[0].id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/venues",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "venues"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_venue_by_id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/venues/{{venue_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "venues",
+            "{{venue_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_tags",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Paginated', () => pm.expect(data.results).to.be.an('array'));",
+              "if (data.results.length) {",
+              "    pm.collectionVariables.set('tag_id', data.results[0].id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tags",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tags"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_tag_by_id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tags/{{tag_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tags",
+            "{{tag_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_venue_features",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "if (data.results.length) {",
+              "    pm.collectionVariables.set('feature_id', data.results[0].id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/venue-features",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "venue-features"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_venue_feature_by_id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/venue-features/{{feature_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "venue-features",
+            "{{feature_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "places_autocomplete",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200/502', () => pm.expect([200, 502]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/places/autocomplete?q=Kyiv Khreshchatyk&session_token=demo-session",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "places",
+            "autocomplete"
+          ],
+          "query": [
+            {
+              "key": "q",
+              "value": "Kyiv Khreshchatyk"
+            },
+            {
+              "key": "session_token",
+              "value": "demo-session"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "places_details",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200/502', () => pm.expect([200, 502]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/places/details?place_id=ChIJBUVa4U7P1EAR_kYKG9nc93M&session_token=demo-session",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "places",
+            "details"
+          ],
+          "query": [
+            {
+              "key": "place_id",
+              "value": "ChIJBUVa4U7P1EAR_kYKG9nc93M"
+            },
+            {
+              "key": "session_token",
+              "value": "demo-session"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_reviews",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "if (data.results.length) {",
+              "    pm.collectionVariables.set('review_id', data.results[0].id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/reviews",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "reviews"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_review_by_id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/reviews/{{review_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "reviews",
+            "{{review_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_complaints",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/complaints",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "complaints"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_complaint_by_id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/complaints/{{complaint_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "complaints",
+            "{{complaint_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_favorites",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "if (data.results.length) {",
+              "    pm.collectionVariables.set('favorite_id', data.results[0].id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/favorites",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "favorites"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_favorite_by_id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/favorites/{{favorite_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "favorites",
+            "{{favorite_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_news",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "if (data.results.length) {",
+              "    pm.collectionVariables.set('news_id', data.results[0].id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/news",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "news"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_news_by_id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/news/{{news_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "news",
+            "{{news_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_hangouts",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "if (data.results.length) {",
+              "    pm.collectionVariables.set('hangout_id', data.results[0].id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/hangouts",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "hangouts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_hangout_by_id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/hangouts/{{hangout_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "hangouts",
+            "{{hangout_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_conversations",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('List returned', () => pm.expect(data).to.be.an('array'));",
+              "if (data.length) {",
+              "    pm.collectionVariables.set('conversation_id', data[0].id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/conversations",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "conversations"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "unread_count",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('Counter returned', () => pm.expect(data.unread_total).to.be.a('number'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/conversations/unread-count",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "conversations",
+            "unread-count"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_conversation_by_id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/conversations/{{conversation_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "conversations",
+            "{{conversation_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_messages",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "pm.test('List returned', () => pm.expect(data).to.be.an('array'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/conversations/{{conversation_id}}/messages",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "conversations",
+            "{{conversation_id}}",
+            "messages"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "venue_stats",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/analytics/venues/{{venue_id}}/stats",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "analytics",
+            "venues",
+            "{{venue_id}}",
+            "stats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_pages",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "if (data.results.length) {",
+              "    pm.collectionVariables.set('page_slug', data.results[0].slug);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/pages",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "pages"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_page_by_slug",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/pages/{{page_slug}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "pages",
+            "{{page_slug}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_top_categories",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
+              "",
+              "const data = pm.response.json();",
+              "if (data.results.length) {",
+              "    pm.collectionVariables.set('top_category_id', data.results[0].id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/top-categories",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "top-categories"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_top_category_by_id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/top-categories/{{top_category_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "top-categories",
+            "{{top_category_id}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost/api",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "venue_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tag_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "feature_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "review_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "complaint_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "favorite_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "news_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "hangout_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "conversation_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "top_category_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "page_slug",
+      "value": "about",
+      "type": "string"
+    }
+  ]
+}

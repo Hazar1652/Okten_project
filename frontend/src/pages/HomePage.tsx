@@ -77,20 +77,24 @@ export default function HomePage() {
   )
 
   useEffect(() => {
-    tagsApi.list().then((res) => setTags(res.data.results)).catch(() => setTags([]))
-    featuresApi.list().then((res) => setFeatures(res.data.results)).catch(() => setFeatures([]))
-    cmsApi
-      .listTopCategories()
-      .then((res) => setTopCategories(res.data.results.filter((c) => c.is_active)))
-      .catch(() => setTopCategories([]))
-    venuesApi
-      .list({ ordering: '-rating_avg', min_rating: 3 })
-      .then((res) => {
-        const items = res.data.results.filter((v) => v.status === 'published').slice(0, 4)
-        setTopVenues(items)
-      })
-      .catch(() => setTopVenues([]))
     load(undefined, emptyVenueFilters)
+
+    void Promise.all([
+      tagsApi.list().then((res) => setTags(res.data.results)).catch(() => setTags([])),
+      featuresApi.list().then((res) => setFeatures(res.data.results)).catch(() => setFeatures([])),
+      cmsApi
+        .listTopCategories()
+        .then((res) => setTopCategories(res.data.results.filter((c) => c.is_active)))
+        .catch(() => setTopCategories([])),
+    ]).then(() => {
+      venuesApi
+        .list({ ordering: '-rating_avg', min_rating: 3 })
+        .then((res) => {
+          const items = res.data.results.filter((v) => v.status === 'published').slice(0, 4)
+          setTopVenues(items)
+        })
+        .catch(() => setTopVenues([]))
+    })
   }, [load])
 
   useEffect(() => {

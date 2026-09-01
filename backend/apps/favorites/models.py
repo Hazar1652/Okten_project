@@ -26,4 +26,3 @@ class Favorite(TimestampedModel):
     def __str__(self):
         return f'{self.user} → {self.venue}'
 
-# Create your models here.

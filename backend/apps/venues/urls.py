@@ -1,16 +1,29 @@
 from django.urls import path
-from rest_framework.routers import DefaultRouter
 
-from .places_views import PlacesAutocompleteView, PlacesDetailsView
-from .views import TagViewSet, VenueFeatureViewSet, VenueViewSet
-
-router = DefaultRouter()
-router.register("venues", VenueViewSet, basename="venues")
-router.register("tags", TagViewSet, basename="tags")
-router.register("venue-features", VenueFeatureViewSet, basename="venue-features")
+from apps.venues.views import (
+    PlacesAutocompleteView,
+    PlacesDetailsView,
+    TagListView,
+    TagRetrieveView,
+    VenueApproveView,
+    VenueFeatureListView,
+    VenueFeatureRetrieveView,
+    VenueListCreateView,
+    VenueRejectView,
+    VenueRetrieveUpdateDestroyView,
+    VenueSubmitView,
+)
 
 urlpatterns = [
-    path("places/autocomplete/", PlacesAutocompleteView.as_view(), name="places-autocomplete"),
-    path("places/details/", PlacesDetailsView.as_view(), name="places-details"),
-    *router.urls,
+    path("venues/", VenueListCreateView.as_view()),
+    path("venues/<int:pk>/", VenueRetrieveUpdateDestroyView.as_view()),
+    path("venues/<int:pk>/submit/", VenueSubmitView.as_view()),
+    path("venues/<int:pk>/approve/", VenueApproveView.as_view()),
+    path("venues/<int:pk>/reject/", VenueRejectView.as_view()),
+    path("tags/", TagListView.as_view()),
+    path("tags/<int:pk>/", TagRetrieveView.as_view()),
+    path("venue-features/", VenueFeatureListView.as_view()),
+    path("venue-features/<int:pk>/", VenueFeatureRetrieveView.as_view()),
+    path("places/autocomplete/", PlacesAutocompleteView.as_view()),
+    path("places/details/", PlacesDetailsView.as_view()),
 ]

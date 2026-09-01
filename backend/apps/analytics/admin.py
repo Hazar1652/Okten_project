@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import VenueViewEvent
 
-
 @admin.register(VenueViewEvent)
 class VenueViewEventAdmin(admin.ModelAdmin):
     list_display = ("id", "venue", "user", "source", "viewed_at")

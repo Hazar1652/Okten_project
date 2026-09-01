@@ -1,8 +1,8 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import NewsViewSet
+from .views import NewsDetailView, NewsListCreateView
 
-router = DefaultRouter()
-router.register("news", NewsViewSet, basename="news")
-
-urlpatterns = router.urls
+urlpatterns = [
+    path("news/", NewsListCreateView.as_view(), name="news-list"),
+    path("news/<int:pk>/", NewsDetailView.as_view(), name="news-detail"),
+]

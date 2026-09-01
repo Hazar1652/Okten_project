@@ -1,8 +1,8 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import FavoriteViewSet
+from apps.favorites.views import FavoriteDetailView, FavoriteListCreateView
 
-router = DefaultRouter()
-router.register("favorites", FavoriteViewSet, basename="favorites")
-
-urlpatterns = router.urls
+urlpatterns = [
+    path("favorites/", FavoriteListCreateView.as_view()),
+    path("favorites/<int:pk>/", FavoriteDetailView.as_view()),
+]

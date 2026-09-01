@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import Hangout
 
-
 @admin.register(Hangout)
 class HangoutAdmin(admin.ModelAdmin):
     list_display = ("id", "author", "venue", "status", "meeting_date", "meeting_time")

@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class TimestampedModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -8,10 +7,7 @@ class TimestampedModel(models.Model):
     class Meta:
         abstract = True
 
-
 class SitePage(TimestampedModel):
-    """Текстові сторінки сайту: about, contacts тощо."""
-
     slug = models.SlugField(max_length=64, unique=True)
     title = models.CharField(max_length=200)
     content = models.TextField(blank=True)
@@ -24,10 +20,7 @@ class SitePage(TimestampedModel):
     def __str__(self):
         return self.title
 
-
 class TopCategory(TimestampedModel):
-    """Редаговані топ-категорії на головній."""
-
     name = models.CharField(max_length=120)
     tag = models.ForeignKey(
         "venues.Tag",

@@ -3,7 +3,6 @@ from django.db import models
 from apps.common.models import TimestampedModel
 from apps.venues.models import Venue
 
-
 class News(TimestampedModel):
     class Category(models.TextChoices):
         GENERAL = 'general', 'General'

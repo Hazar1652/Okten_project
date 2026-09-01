@@ -70,6 +70,4 @@ class Complaint(TimestampedModel):
 
     def __str__(self):
         return f'Complaint by {self.author} on review #{self.review_id} ({self.status})'
-    
 
-# Create your models here.

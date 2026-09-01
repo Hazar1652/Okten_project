@@ -1,13 +1,19 @@
-from django.urls import include, path
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .admin_views import UserAdminViewSet
-from .views import MeView
-
-router = DefaultRouter()
-router.register("users/admin", UserAdminViewSet, basename="users-admin")
+from .views import (
+    MeView,
+    UserAdminDetailView,
+    UserAdminHardDeleteView,
+    UserAdminListView,
+)
 
 urlpatterns = [
     path("users/me/", MeView.as_view(), name="users-me"),
-    path("", include(router.urls)),
+    path("users/admin/", UserAdminListView.as_view(), name="users-admin-list"),
+    path("users/admin/<int:pk>/", UserAdminDetailView.as_view(), name="users-admin-detail"),
+    path(
+        "users/admin/<int:pk>/hard-delete/",
+        UserAdminHardDeleteView.as_view(),
+        name="users-admin-hard-delete",
+    ),
 ]

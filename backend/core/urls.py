@@ -2,8 +2,12 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from apps.users.auth import EmailOrUsernameTokenObtainPairView
-from apps.users.social_views import FacebookAuthView, GoogleAuthView, OAuthConfigView
-from apps.users.views import RegisterView
+from apps.users.views import (
+    FacebookAuthView,
+    GoogleAuthView,
+    OAuthConfigView,
+    RegisterView,
+)
 
 from .views import HealthCheckView
 

@@ -19,7 +19,6 @@ export interface CreateVenuePayload {
   status?: string
 }
 
-/** Порожні рядки в optional-полях ламають EmailField/DecimalField на бекенді. */
 export function sanitizeVenuePayload<T extends Partial<CreateVenuePayload>>(data: T): T {
   const out = { ...data }
   for (const key of ['email', 'phone_number', 'avg_check', 'description'] as const) {

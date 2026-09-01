@@ -58,4 +58,3 @@ class Hangout(TimestampedModel):
     def __str__(self):
         return f'{self.author} → {self.venue} ({self.status})'
 
-# Create your models here.

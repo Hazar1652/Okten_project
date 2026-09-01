@@ -11,7 +11,6 @@ from apps.venues.models import Venue
 
 User = get_user_model()
 
-
 class MessagingSmokeTests(APITestCase):
     def setUp(self):
         self.owner = User.objects.create_user(

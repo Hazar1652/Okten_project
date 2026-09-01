@@ -5,7 +5,6 @@ type Props = {
   className?: string
 }
 
-/** Leaflet MapContainer потребує реального DOM; рендеримо лише на клієнті. */
 export default function ClientOnlyMap({ children, className }: Props) {
   const [ready, setReady] = useState(false)
 

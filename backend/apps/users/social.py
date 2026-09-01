@@ -1,5 +1,3 @@
-"""Верифікація OAuth-токенів і створення/пошук користувача."""
-
 from __future__ import annotations
 
 import re
@@ -12,10 +10,8 @@ from rest_framework import serializers
 
 User = get_user_model()
 
-
 class SocialAuthError(serializers.ValidationError):
     pass
-
 
 def _unique_username(base: str) -> str:
     cleaned = re.sub(r"[^a-zA-Z0-9_]", "", base)[:30] or "user"
@@ -27,14 +23,12 @@ def _unique_username(base: str) -> str:
         n += 1
     return candidate
 
-
 def _oauth_username_base(
     *,
     email: str | None,
     first_name: str = "",
     username_hint: str | None = None,
 ) -> str:
-    """Людський логін: email/ім'я, а не Google sub / довгий числовий id."""
     if username_hint and not username_hint.isdigit() and not re.fullmatch(r"fb_\d+", username_hint):
         return username_hint
     if email and "@" in email:
@@ -44,7 +38,6 @@ def _oauth_username_base(
     if username_hint:
         return username_hint
     return f"user{secrets.token_hex(3)}"
-
 
 def get_or_create_user_from_oauth(
     *,
@@ -56,7 +49,7 @@ def get_or_create_user_from_oauth(
     if email:
         user = User.objects.filter(email__iexact=email).first()
         if user:
-            # Виправити вже створені акаунти з логіном = Google sub (лише цифри).
+
             if user.username.isdigit() or re.fullmatch(r"fb_\d+", user.username or ""):
                 nicer = _unique_username(
                     _oauth_username_base(
@@ -85,7 +78,6 @@ def get_or_create_user_from_oauth(
     user.set_unusable_password()
     user.save()
     return user, True
-
 
 def verify_google_id_token(id_token: str) -> dict:
     client_id = settings.GOOGLE_OAUTH_CLIENT_ID
@@ -122,7 +114,6 @@ def verify_google_id_token(id_token: str) -> dict:
         "last_name": data.get("family_name", ""),
         "sub": data.get("sub", ""),
     }
-
 
 def verify_facebook_access_token(access_token: str) -> dict:
     app_id = (settings.FACEBOOK_APP_ID or "").strip()
@@ -180,7 +171,6 @@ def verify_facebook_access_token(access_token: str) -> dict:
         "sub": fb_id,
         "username_hint": f"fb_{fb_id}" if fb_id else None,
     }
-
 
 def issue_tokens_for_user(user: User) -> dict:
     from rest_framework_simplejwt.tokens import RefreshToken

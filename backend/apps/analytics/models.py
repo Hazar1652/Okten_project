@@ -4,7 +4,6 @@ from django.conf import settings
 from apps.common.models import TimestampedModel
 from apps.venues.models import Venue
 
-
 class VenueViewEvent(models.Model):
     venue = models.ForeignKey(
         Venue,

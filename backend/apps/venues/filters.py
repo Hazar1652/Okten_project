@@ -1,13 +1,22 @@
 import django_filters
+from rest_framework.filters import OrderingFilter
 
 from apps.common.permissions import is_super_admin
 
 from .models import Tag, Venue, VenueFeature
 
+class SafeOrderingFilter(OrderingFilter):
+    def get_ordering(self, request, queryset, view):
+        ordering = super().get_ordering(request, queryset, view)
+        if not ordering:
+            return ordering
+        if "distance_km" not in getattr(queryset.query, "annotations", {}):
+            ordering = [o for o in ordering if o.lstrip("-") != "distance_km"]
+        if not ordering:
+            return list(getattr(view, "ordering", None) or [])
+        return ordering
 
 class VenueFilter(django_filters.FilterSet):
-    """Фільтри каталогу закладів (query params)."""
-
     tags = django_filters.ModelMultipleChoiceFilter(
         queryset=Tag.objects.all(),
         field_name="tags",

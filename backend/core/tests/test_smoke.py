@@ -10,7 +10,6 @@ from apps.venues.models import Venue
 
 User = get_user_model()
 
-
 class AuthSmokeTests(APITestCase):
     def test_register_returns_tokens_and_user(self):
         response = self.client.post(
@@ -66,7 +65,6 @@ class AuthSmokeTests(APITestCase):
         self.assertEqual(patch_response.status_code, status.HTTP_200_OK)
         user.refresh_from_db()
         self.assertEqual(user.first_name, "Іван")
-
 
 class VenueVisibilitySmokeTests(APITestCase):
     def setUp(self):
@@ -149,7 +147,6 @@ class VenueVisibilitySmokeTests(APITestCase):
         self.assertIn(mine.id, ids)
         self.assertNotIn(other_venue.id, ids)
 
-
 class VenueOrderingSmokeTests(APITestCase):
     def setUp(self):
         self.owner = User.objects.create_user(
@@ -170,7 +167,6 @@ class VenueOrderingSmokeTests(APITestCase):
         response = self.client.get("/api/venues/?ordering=distance_km")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("results", response.data)
-
 
 class DuplicateReviewFavoriteSmokeTests(APITestCase):
     def setUp(self):

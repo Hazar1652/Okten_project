@@ -9,7 +9,6 @@ import { useAuth } from '../store/authContext'
 import type { Hangout, Venue } from '../types/api'
 import { apiErrorMessage } from '../utils/apiError'
 
-/** Локальна дата у форматі YYYY-MM-DD для значення за замовчуванням. */
 function localDateStr(d = new Date()): string {
   const tzOffset = d.getTimezoneOffset() * 60000
   return new Date(d.getTime() - tzOffset).toISOString().slice(0, 10)

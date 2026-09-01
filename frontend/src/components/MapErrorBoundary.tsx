@@ -7,7 +7,6 @@ type Props = {
 
 type State = { hasError: boolean }
 
-/** Ловить падіння Leaflet / react-leaflet, щоб не ламати всю сторінку. */
 export default class MapErrorBoundary extends Component<Props, State> {
   state: State = { hasError: false }
 
