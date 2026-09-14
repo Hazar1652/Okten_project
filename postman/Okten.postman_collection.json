@@ -20,9 +20,9 @@
               "",
               "const data = pm.response.json();",
               "pm.test('Tokens returned', () => { pm.expect(data).to.have.property('access'); pm.expect(data).to.have.property('refresh'); });",
-              "pm.collectionVariables.set('access_token', data.access);",
-              "pm.collectionVariables.set('refresh_token', data.refresh);",
-              "pm.collectionVariables.set('user_id', data.user.id);"
+              "pm.environment.set('access_token', data.access);",
+              "pm.environment.set('refresh_token', data.refresh);",
+              "pm.environment.set('user_id', data.user.id);"
             ]
           }
         }
@@ -48,13 +48,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/auth/register",
+          "raw": "{{base_url}}/auth/register/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "auth",
-            "register"
+            "register",
+            ""
           ]
         }
       },
@@ -72,8 +73,8 @@
               "",
               "const data = pm.response.json();",
               "pm.test('Access token returned', () => pm.expect(data.access).to.be.a('string'));",
-              "pm.collectionVariables.set('access_token', data.access);",
-              "pm.collectionVariables.set('refresh_token', data.refresh);"
+              "pm.environment.set('access_token', data.access);",
+              "pm.environment.set('refresh_token', data.refresh);"
             ]
           }
         }
@@ -99,13 +100,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/auth/token",
+          "raw": "{{base_url}}/auth/token/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "auth",
-            "token"
+            "token",
+            ""
           ]
         }
       },
@@ -122,7 +124,7 @@
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
               "const data = pm.response.json();",
-              "pm.collectionVariables.set('access_token', data.access);"
+              "pm.environment.set('access_token', data.access);"
             ]
           }
         }
@@ -148,14 +150,15 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/auth/token/refresh",
+          "raw": "{{base_url}}/auth/token/refresh/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "auth",
             "token",
-            "refresh"
+            "refresh",
+            ""
           ]
         }
       },
@@ -173,7 +176,7 @@
               "",
               "const data = pm.response.json();",
               "pm.test('Created as pending', () => pm.expect(data.status).to.eql('pending'));",
-              "pm.collectionVariables.set('venue_id', data.id);"
+              "pm.environment.set('venue_id', data.id);"
             ]
           }
         }
@@ -196,12 +199,13 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/venues",
+          "raw": "{{base_url}}/venues/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "venues"
+            "venues",
+            ""
           ]
         }
       },
@@ -227,14 +231,15 @@
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/venues/{{venue_id}}/submit",
+          "raw": "{{base_url}}/venues/{{venue_id}}/submit/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "venues",
             "{{venue_id}}",
-            "submit"
+            "submit",
+            ""
           ]
         }
       },
@@ -260,14 +265,15 @@
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/venues/{{venue_id}}/approve",
+          "raw": "{{base_url}}/venues/{{venue_id}}/approve/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "venues",
             "{{venue_id}}",
-            "approve"
+            "approve",
+            ""
           ]
         }
       },
@@ -293,14 +299,15 @@
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/venues/{{venue_id}}/reject",
+          "raw": "{{base_url}}/venues/{{venue_id}}/reject/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "venues",
             "{{venue_id}}",
-            "reject"
+            "reject",
+            ""
           ]
         }
       },
@@ -317,7 +324,7 @@
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
               "const data = pm.response.json();",
-              "pm.collectionVariables.set('review_id', data.id);"
+              "pm.environment.set('review_id', data.id);"
             ]
           }
         }
@@ -340,12 +347,13 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/reviews",
+          "raw": "{{base_url}}/reviews/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "reviews"
+            "reviews",
+            ""
           ]
         }
       },
@@ -362,7 +370,7 @@
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
               "const data = pm.response.json();",
-              "pm.collectionVariables.set('complaint_id', data.id);"
+              "pm.environment.set('complaint_id', data.id);"
             ]
           }
         }
@@ -385,12 +393,13 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/complaints",
+          "raw": "{{base_url}}/complaints/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "complaints"
+            "complaints",
+            ""
           ]
         }
       },
@@ -407,7 +416,7 @@
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
               "const data = pm.response.json();",
-              "pm.collectionVariables.set('favorite_id', data.id);"
+              "pm.environment.set('favorite_id', data.id);"
             ]
           }
         }
@@ -430,12 +439,13 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/favorites",
+          "raw": "{{base_url}}/favorites/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "favorites"
+            "favorites",
+            ""
           ]
         }
       },
@@ -452,7 +462,7 @@
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
               "const data = pm.response.json();",
-              "pm.collectionVariables.set('news_id', data.id);"
+              "pm.environment.set('news_id', data.id);"
             ]
           }
         }
@@ -475,12 +485,13 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/news",
+          "raw": "{{base_url}}/news/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "news"
+            "news",
+            ""
           ]
         }
       },
@@ -498,7 +509,7 @@
               "",
               "const data = pm.response.json();",
               "pm.test('Open', () => pm.expect(data.status).to.eql('open'));",
-              "pm.collectionVariables.set('hangout_id', data.id);"
+              "pm.environment.set('hangout_id', data.id);"
             ]
           }
         }
@@ -513,7 +524,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"venue\": \"{{venue_id}}\",\n  \"meeting_date\": \"2026-12-01T19:00:00Z\",\n  \"meeting_time\": \"19:00:00\",\n  \"goal_description\": \"Шукаю компанію на бокал вина у п'ятницю ввечері.\",\n  \"contact_me\": true,\n  \"gender_preferences\": \"any\",\n  \"people_count\": 3,\n  \"payer_type\": \"split\",\n  \"budget_min\": 300,\n  \"budget_max\": 800\n}",
+          "raw": "{\n  \"venue\": \"{{venue_id}}\",\n  \"meeting_date\": \"2026-12-01T19:00:00Z\",\n  \"meeting_time\": \"19:00:00\",\n  \"goal_description\": \"Шукаю компанію на бокал вина у п'ятницю ввечері.\",\n  \"contact_me\": \"telegram @demo_user\",\n  \"gender_preferences\": \"any\",\n  \"people_count\": 3,\n  \"payer_type\": \"split\",\n  \"budget_min\": 300,\n  \"budget_max\": 800\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -521,12 +532,13 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/hangouts",
+          "raw": "{{base_url}}/hangouts/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "hangouts"
+            "hangouts",
+            ""
           ]
         }
       },
@@ -552,14 +564,15 @@
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/hangouts/{{hangout_id}}/cancel",
+          "raw": "{{base_url}}/hangouts/{{hangout_id}}/cancel/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "hangouts",
             "{{hangout_id}}",
-            "cancel"
+            "cancel",
+            ""
           ]
         }
       },
@@ -585,14 +598,15 @@
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/hangouts/{{hangout_id}}/close",
+          "raw": "{{base_url}}/hangouts/{{hangout_id}}/close/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "hangouts",
             "{{hangout_id}}",
-            "close"
+            "close",
+            ""
           ]
         }
       },
@@ -609,7 +623,7 @@
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
               "const data = pm.response.json();",
-              "pm.collectionVariables.set('conversation_id', data.id);"
+              "pm.environment.set('conversation_id', data.id);"
             ]
           }
         }
@@ -632,12 +646,13 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/conversations",
+          "raw": "{{base_url}}/conversations/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "conversations"
+            "conversations",
+            ""
           ]
         }
       },
@@ -677,14 +692,15 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/conversations/{{conversation_id}}/messages",
+          "raw": "{{base_url}}/conversations/{{conversation_id}}/messages/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "conversations",
             "{{conversation_id}}",
-            "messages"
+            "messages",
+            ""
           ]
         }
       },
@@ -710,14 +726,15 @@
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/conversations/{{conversation_id}}/read",
+          "raw": "{{base_url}}/conversations/{{conversation_id}}/read/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "conversations",
             "{{conversation_id}}",
-            "read"
+            "read",
+            ""
           ]
         }
       },
@@ -734,7 +751,7 @@
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
               "const data = pm.response.json();",
-              "pm.collectionVariables.set('top_category_id', data.id);"
+              "pm.environment.set('top_category_id', data.id);"
             ]
           }
         }
@@ -757,12 +774,13 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/top-categories",
+          "raw": "{{base_url}}/top-categories/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "top-categories"
+            "top-categories",
+            ""
           ]
         }
       },
@@ -802,13 +820,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/users/me",
+          "raw": "{{base_url}}/users/me/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "users",
-            "me"
+            "me",
+            ""
           ]
         }
       },
@@ -845,14 +864,15 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/users/admin/{{user_id}}",
+          "raw": "{{base_url}}/users/admin/{{user_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "users",
             "admin",
-            "{{user_id}}"
+            "{{user_id}}",
+            ""
           ]
         }
       },
@@ -892,13 +912,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/venues/{{venue_id}}",
+          "raw": "{{base_url}}/venues/{{venue_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "venues",
-            "{{venue_id}}"
+            "{{venue_id}}",
+            ""
           ]
         }
       },
@@ -935,13 +956,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/reviews/{{review_id}}",
+          "raw": "{{base_url}}/reviews/{{review_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "reviews",
-            "{{review_id}}"
+            "{{review_id}}",
+            ""
           ]
         }
       },
@@ -978,13 +1000,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/complaints/{{complaint_id}}",
+          "raw": "{{base_url}}/complaints/{{complaint_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "complaints",
-            "{{complaint_id}}"
+            "{{complaint_id}}",
+            ""
           ]
         }
       },
@@ -1021,13 +1044,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/news/{{news_id}}",
+          "raw": "{{base_url}}/news/{{news_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "news",
-            "{{news_id}}"
+            "{{news_id}}",
+            ""
           ]
         }
       },
@@ -1064,13 +1088,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/hangouts/{{hangout_id}}",
+          "raw": "{{base_url}}/hangouts/{{hangout_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "hangouts",
-            "{{hangout_id}}"
+            "{{hangout_id}}",
+            ""
           ]
         }
       },
@@ -1107,13 +1132,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/top-categories/{{top_category_id}}",
+          "raw": "{{base_url}}/top-categories/{{top_category_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "top-categories",
-            "{{top_category_id}}"
+            "{{top_category_id}}",
+            ""
           ]
         }
       },
@@ -1136,14 +1162,15 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/users/admin/{{user_id}}",
+          "raw": "{{base_url}}/users/admin/{{user_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "users",
             "admin",
-            "{{user_id}}"
+            "{{user_id}}",
+            ""
           ]
         }
       },
@@ -1166,7 +1193,7 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/users/admin/{{user_id}}/hard-delete",
+          "raw": "{{base_url}}/users/admin/{{user_id}}/hard-delete/",
           "host": [
             "{{base_url}}"
           ],
@@ -1174,7 +1201,8 @@
             "users",
             "admin",
             "{{user_id}}",
-            "hard-delete"
+            "hard-delete",
+            ""
           ]
         }
       },
@@ -1197,13 +1225,14 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/venues/{{venue_id}}",
+          "raw": "{{base_url}}/venues/{{venue_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "venues",
-            "{{venue_id}}"
+            "{{venue_id}}",
+            ""
           ]
         }
       },
@@ -1226,13 +1255,14 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/reviews/{{review_id}}",
+          "raw": "{{base_url}}/reviews/{{review_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "reviews",
-            "{{review_id}}"
+            "{{review_id}}",
+            ""
           ]
         }
       },
@@ -1255,13 +1285,14 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/favorites/{{favorite_id}}",
+          "raw": "{{base_url}}/favorites/{{favorite_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "favorites",
-            "{{favorite_id}}"
+            "{{favorite_id}}",
+            ""
           ]
         }
       },
@@ -1284,13 +1315,14 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/news/{{news_id}}",
+          "raw": "{{base_url}}/news/{{news_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "news",
-            "{{news_id}}"
+            "{{news_id}}",
+            ""
           ]
         }
       },
@@ -1313,13 +1345,14 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/hangouts/{{hangout_id}}",
+          "raw": "{{base_url}}/hangouts/{{hangout_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "hangouts",
-            "{{hangout_id}}"
+            "{{hangout_id}}",
+            ""
           ]
         }
       },
@@ -1342,13 +1375,14 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/top-categories/{{top_category_id}}",
+          "raw": "{{base_url}}/top-categories/{{top_category_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "top-categories",
-            "{{top_category_id}}"
+            "{{top_category_id}}",
+            ""
           ]
         }
       },
@@ -1377,12 +1411,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/health",
+          "raw": "{{base_url}}/health/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "health"
+            "health",
+            ""
           ]
         }
       },
@@ -1408,13 +1443,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/auth/oauth-config",
+          "raw": "{{base_url}}/auth/oauth-config/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "auth",
-            "oauth-config"
+            "oauth-config",
+            ""
           ]
         }
       },
@@ -1431,7 +1467,7 @@
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
               "const data = pm.response.json();",
-              "pm.collectionVariables.set('user_id', data.id);"
+              "pm.environment.set('user_id', data.id);"
             ]
           }
         }
@@ -1440,13 +1476,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/users/me",
+          "raw": "{{base_url}}/users/me/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "users",
-            "me"
+            "me",
+            ""
           ]
         }
       },
@@ -1472,13 +1509,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/users/admin",
+          "raw": "{{base_url}}/users/admin/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "users",
-            "admin"
+            "admin",
+            ""
           ]
         }
       },
@@ -1501,14 +1539,15 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/users/admin/{{user_id}}",
+          "raw": "{{base_url}}/users/admin/{{user_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "users",
             "admin",
-            "{{user_id}}"
+            "{{user_id}}",
+            ""
           ]
         }
       },
@@ -1527,7 +1566,7 @@
               "const data = pm.response.json();",
               "pm.test('Paginated', () => pm.expect(data.results).to.be.an('array'));",
               "if (data.results.length) {",
-              "    pm.collectionVariables.set('venue_id', data.results[0].id);",
+              "    pm.environment.set('venue_id', data.results[0].id);",
               "}"
             ]
           }
@@ -1540,12 +1579,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/venues",
+          "raw": "{{base_url}}/venues/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "venues"
+            "venues",
+            ""
           ]
         }
       },
@@ -1571,13 +1611,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/venues/{{venue_id}}",
+          "raw": "{{base_url}}/venues/{{venue_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "venues",
-            "{{venue_id}}"
+            "{{venue_id}}",
+            ""
           ]
         }
       },
@@ -1596,7 +1637,7 @@
               "const data = pm.response.json();",
               "pm.test('Paginated', () => pm.expect(data.results).to.be.an('array'));",
               "if (data.results.length) {",
-              "    pm.collectionVariables.set('tag_id', data.results[0].id);",
+              "    pm.environment.set('tag_id', data.results[0].id);",
               "}"
             ]
           }
@@ -1609,12 +1650,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/tags",
+          "raw": "{{base_url}}/tags/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "tags"
+            "tags",
+            ""
           ]
         }
       },
@@ -1640,13 +1682,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/tags/{{tag_id}}",
+          "raw": "{{base_url}}/tags/{{tag_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "tags",
-            "{{tag_id}}"
+            "{{tag_id}}",
+            ""
           ]
         }
       },
@@ -1664,7 +1707,7 @@
               "",
               "const data = pm.response.json();",
               "if (data.results.length) {",
-              "    pm.collectionVariables.set('feature_id', data.results[0].id);",
+              "    pm.environment.set('feature_id', data.results[0].id);",
               "}"
             ]
           }
@@ -1677,12 +1720,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/venue-features",
+          "raw": "{{base_url}}/venue-features/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "venue-features"
+            "venue-features",
+            ""
           ]
         }
       },
@@ -1708,13 +1752,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/venue-features/{{feature_id}}",
+          "raw": "{{base_url}}/venue-features/{{feature_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "venue-features",
-            "{{feature_id}}"
+            "{{feature_id}}",
+            ""
           ]
         }
       },
@@ -1737,13 +1782,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/places/autocomplete?q=Kyiv Khreshchatyk&session_token=demo-session",
+          "raw": "{{base_url}}/places/autocomplete/?q=Kyiv Khreshchatyk&session_token=demo-session",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "places",
-            "autocomplete"
+            "autocomplete",
+            ""
           ],
           "query": [
             {
@@ -1776,13 +1822,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/places/details?place_id=ChIJBUVa4U7P1EAR_kYKG9nc93M&session_token=demo-session",
+          "raw": "{{base_url}}/places/details/?place_id=ChIJBUVa4U7P1EAR_kYKG9nc93M&session_token=demo-session",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "places",
-            "details"
+            "details",
+            ""
           ],
           "query": [
             {
@@ -1810,7 +1857,7 @@
               "",
               "const data = pm.response.json();",
               "if (data.results.length) {",
-              "    pm.collectionVariables.set('review_id', data.results[0].id);",
+              "    pm.environment.set('review_id', data.results[0].id);",
               "}"
             ]
           }
@@ -1823,12 +1870,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/reviews",
+          "raw": "{{base_url}}/reviews/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "reviews"
+            "reviews",
+            ""
           ]
         }
       },
@@ -1854,13 +1902,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/reviews/{{review_id}}",
+          "raw": "{{base_url}}/reviews/{{review_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "reviews",
-            "{{review_id}}"
+            "{{review_id}}",
+            ""
           ]
         }
       },
@@ -1883,12 +1932,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/complaints",
+          "raw": "{{base_url}}/complaints/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "complaints"
+            "complaints",
+            ""
           ]
         }
       },
@@ -1911,13 +1961,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/complaints/{{complaint_id}}",
+          "raw": "{{base_url}}/complaints/{{complaint_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "complaints",
-            "{{complaint_id}}"
+            "{{complaint_id}}",
+            ""
           ]
         }
       },
@@ -1935,7 +1986,7 @@
               "",
               "const data = pm.response.json();",
               "if (data.results.length) {",
-              "    pm.collectionVariables.set('favorite_id', data.results[0].id);",
+              "    pm.environment.set('favorite_id', data.results[0].id);",
               "}"
             ]
           }
@@ -1945,12 +1996,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/favorites",
+          "raw": "{{base_url}}/favorites/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "favorites"
+            "favorites",
+            ""
           ]
         }
       },
@@ -1973,13 +2025,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/favorites/{{favorite_id}}",
+          "raw": "{{base_url}}/favorites/{{favorite_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "favorites",
-            "{{favorite_id}}"
+            "{{favorite_id}}",
+            ""
           ]
         }
       },
@@ -1997,7 +2050,7 @@
               "",
               "const data = pm.response.json();",
               "if (data.results.length) {",
-              "    pm.collectionVariables.set('news_id', data.results[0].id);",
+              "    pm.environment.set('news_id', data.results[0].id);",
               "}"
             ]
           }
@@ -2010,12 +2063,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/news",
+          "raw": "{{base_url}}/news/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "news"
+            "news",
+            ""
           ]
         }
       },
@@ -2041,13 +2095,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/news/{{news_id}}",
+          "raw": "{{base_url}}/news/{{news_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "news",
-            "{{news_id}}"
+            "{{news_id}}",
+            ""
           ]
         }
       },
@@ -2065,7 +2120,7 @@
               "",
               "const data = pm.response.json();",
               "if (data.results.length) {",
-              "    pm.collectionVariables.set('hangout_id', data.results[0].id);",
+              "    pm.environment.set('hangout_id', data.results[0].id);",
               "}"
             ]
           }
@@ -2078,12 +2133,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/hangouts",
+          "raw": "{{base_url}}/hangouts/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "hangouts"
+            "hangouts",
+            ""
           ]
         }
       },
@@ -2109,13 +2165,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/hangouts/{{hangout_id}}",
+          "raw": "{{base_url}}/hangouts/{{hangout_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "hangouts",
-            "{{hangout_id}}"
+            "{{hangout_id}}",
+            ""
           ]
         }
       },
@@ -2134,7 +2191,7 @@
               "const data = pm.response.json();",
               "pm.test('List returned', () => pm.expect(data).to.be.an('array'));",
               "if (data.length) {",
-              "    pm.collectionVariables.set('conversation_id', data[0].id);",
+              "    pm.environment.set('conversation_id', data[0].id);",
               "}"
             ]
           }
@@ -2144,12 +2201,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/conversations",
+          "raw": "{{base_url}}/conversations/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "conversations"
+            "conversations",
+            ""
           ]
         }
       },
@@ -2175,13 +2233,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/conversations/unread-count",
+          "raw": "{{base_url}}/conversations/unread-count/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "conversations",
-            "unread-count"
+            "unread-count",
+            ""
           ]
         }
       },
@@ -2204,13 +2263,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/conversations/{{conversation_id}}",
+          "raw": "{{base_url}}/conversations/{{conversation_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "conversations",
-            "{{conversation_id}}"
+            "{{conversation_id}}",
+            ""
           ]
         }
       },
@@ -2236,14 +2296,15 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/conversations/{{conversation_id}}/messages",
+          "raw": "{{base_url}}/conversations/{{conversation_id}}/messages/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "conversations",
             "{{conversation_id}}",
-            "messages"
+            "messages",
+            ""
           ]
         }
       },
@@ -2266,7 +2327,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/analytics/venues/{{venue_id}}/stats",
+          "raw": "{{base_url}}/analytics/venues/{{venue_id}}/stats/",
           "host": [
             "{{base_url}}"
           ],
@@ -2274,7 +2335,8 @@
             "analytics",
             "venues",
             "{{venue_id}}",
-            "stats"
+            "stats",
+            ""
           ]
         }
       },
@@ -2292,7 +2354,7 @@
               "",
               "const data = pm.response.json();",
               "if (data.results.length) {",
-              "    pm.collectionVariables.set('page_slug', data.results[0].slug);",
+              "    pm.environment.set('page_slug', data.results[0].slug);",
               "}"
             ]
           }
@@ -2305,12 +2367,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/pages",
+          "raw": "{{base_url}}/pages/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "pages"
+            "pages",
+            ""
           ]
         }
       },
@@ -2336,13 +2399,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/pages/{{page_slug}}",
+          "raw": "{{base_url}}/pages/{{page_slug}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "pages",
-            "{{page_slug}}"
+            "{{page_slug}}",
+            ""
           ]
         }
       },
@@ -2360,7 +2424,7 @@
               "",
               "const data = pm.response.json();",
               "if (data.results.length) {",
-              "    pm.collectionVariables.set('top_category_id', data.results[0].id);",
+              "    pm.environment.set('top_category_id', data.results[0].id);",
               "}"
             ]
           }
@@ -2373,12 +2437,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/top-categories",
+          "raw": "{{base_url}}/top-categories/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            "top-categories"
+            "top-categories",
+            ""
           ]
         }
       },
@@ -2404,13 +2469,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/top-categories/{{top_category_id}}",
+          "raw": "{{base_url}}/top-categories/{{top_category_id}}/",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "top-categories",
-            "{{top_category_id}}"
+            "{{top_category_id}}",
+            ""
           ]
         }
       },
