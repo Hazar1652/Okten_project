@@ -18,11 +18,11 @@
             "exec": [
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Tokens returned', () => { pm.expect(data).to.have.property('access'); pm.expect(data).to.have.property('refresh'); });",
-              "pm.environment.set('access_token', data.access);",
-              "pm.environment.set('refresh_token', data.refresh);",
-              "pm.environment.set('user_id', data.user.id);"
+              "const responseBody = pm.response.json();",
+              "pm.test('Tokens returned', () => { pm.expect(responseBody).to.have.property('access'); pm.expect(responseBody).to.have.property('refresh'); });",
+              "pm.environment.set('access_token', responseBody.access);",
+              "pm.environment.set('refresh_token', responseBody.refresh);",
+              "pm.environment.set('user_id', responseBody.user.id);"
             ]
           }
         }
@@ -71,10 +71,10 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Access token returned', () => pm.expect(data.access).to.be.a('string'));",
-              "pm.environment.set('access_token', data.access);",
-              "pm.environment.set('refresh_token', data.refresh);"
+              "const responseBody = pm.response.json();",
+              "pm.test('Access token returned', () => pm.expect(responseBody.access).to.be.a('string'));",
+              "pm.environment.set('access_token', responseBody.access);",
+              "pm.environment.set('refresh_token', responseBody.refresh);"
             ]
           }
         }
@@ -123,8 +123,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.environment.set('access_token', data.access);"
+              "const responseBody = pm.response.json();",
+              "pm.environment.set('access_token', responseBody.access);"
             ]
           }
         }
@@ -174,9 +174,9 @@
             "exec": [
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Created as pending', () => pm.expect(data.status).to.eql('pending'));",
-              "pm.environment.set('venue_id', data.id);"
+              "const responseBody = pm.response.json();",
+              "pm.test('Created as pending', () => pm.expect(responseBody.status).to.eql('pending'));",
+              "pm.environment.set('venue_id', responseBody.id);"
             ]
           }
         }
@@ -221,8 +221,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Pending', () => pm.expect(data.status).to.eql('pending'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('Pending', () => pm.expect(responseBody.status).to.eql('pending'));"
             ]
           }
         }
@@ -255,8 +255,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Published', () => pm.expect(data.status).to.eql('published'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('Published', () => pm.expect(responseBody.status).to.eql('published'));"
             ]
           }
         }
@@ -289,8 +289,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Rejected', () => pm.expect(data.status).to.eql('rejected'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('Rejected', () => pm.expect(responseBody.status).to.eql('rejected'));"
             ]
           }
         }
@@ -323,8 +323,8 @@
             "exec": [
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.environment.set('review_id', data.id);"
+              "const responseBody = pm.response.json();",
+              "pm.environment.set('review_id', responseBody.id);"
             ]
           }
         }
@@ -369,8 +369,8 @@
             "exec": [
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.environment.set('complaint_id', data.id);"
+              "const responseBody = pm.response.json();",
+              "pm.environment.set('complaint_id', responseBody.id);"
             ]
           }
         }
@@ -415,8 +415,8 @@
             "exec": [
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.environment.set('favorite_id', data.id);"
+              "const responseBody = pm.response.json();",
+              "pm.environment.set('favorite_id', responseBody.id);"
             ]
           }
         }
@@ -461,8 +461,8 @@
             "exec": [
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.environment.set('news_id', data.id);"
+              "const responseBody = pm.response.json();",
+              "pm.environment.set('news_id', responseBody.id);"
             ]
           }
         }
@@ -507,9 +507,9 @@
             "exec": [
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Open', () => pm.expect(data.status).to.eql('open'));",
-              "pm.environment.set('hangout_id', data.id);"
+              "const responseBody = pm.response.json();",
+              "pm.test('Open', () => pm.expect(responseBody.status).to.eql('open'));",
+              "pm.environment.set('hangout_id', responseBody.id);"
             ]
           }
         }
@@ -554,8 +554,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Cancelled', () => pm.expect(data.status).to.eql('cancelled'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('Cancelled', () => pm.expect(responseBody.status).to.eql('cancelled'));"
             ]
           }
         }
@@ -588,8 +588,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Closed', () => pm.expect(data.status).to.eql('closed'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('Closed', () => pm.expect(responseBody.status).to.eql('closed'));"
             ]
           }
         }
@@ -622,8 +622,8 @@
             "exec": [
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.environment.set('conversation_id', data.id);"
+              "const responseBody = pm.response.json();",
+              "pm.environment.set('conversation_id', responseBody.id);"
             ]
           }
         }
@@ -668,8 +668,8 @@
             "exec": [
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Body saved', () => pm.expect(data.body).to.be.a('string'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('Body saved', () => pm.expect(responseBody.body).to.be.a('string'));"
             ]
           }
         }
@@ -716,8 +716,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Ok flag', () => pm.expect(data.ok).to.be.true);"
+              "const responseBody = pm.response.json();",
+              "pm.test('Ok flag', () => pm.expect(responseBody.ok).to.be.true);"
             ]
           }
         }
@@ -750,8 +750,8 @@
             "exec": [
               "pm.test('Status 201', () => pm.expect([201]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.environment.set('top_category_id', data.id);"
+              "const responseBody = pm.response.json();",
+              "pm.environment.set('top_category_id', responseBody.id);"
             ]
           }
         }
@@ -796,8 +796,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Name updated', () => pm.expect(data.first_name).to.eql('Updated'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('Name updated', () => pm.expect(responseBody.first_name).to.eql('Updated'));"
             ]
           }
         }
@@ -888,8 +888,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Renamed', () => pm.expect(data.name).to.eql('Demo Bar Updated'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('Renamed', () => pm.expect(responseBody.name).to.eql('Demo Bar Updated'));"
             ]
           }
         }
@@ -1398,8 +1398,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Status ok', () => pm.expect(data.status).to.eql('ok'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('Status ok', () => pm.expect(responseBody.status).to.eql('ok'));"
             ]
           }
         }
@@ -1466,8 +1466,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.environment.set('user_id', data.id);"
+              "const responseBody = pm.response.json();",
+              "pm.environment.set('user_id', responseBody.id);"
             ]
           }
         }
@@ -1499,8 +1499,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Paginated', () => pm.expect(data.results).to.be.an('array'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('Paginated', () => pm.expect(responseBody.results).to.be.an('array'));"
             ]
           }
         }
@@ -1563,10 +1563,10 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Paginated', () => pm.expect(data.results).to.be.an('array'));",
-              "if (data.results.length) {",
-              "    pm.environment.set('venue_id', data.results[0].id);",
+              "const responseBody = pm.response.json();",
+              "pm.test('Paginated', () => pm.expect(responseBody.results).to.be.an('array'));",
+              "if (responseBody.results.length) {",
+              "    pm.environment.set('venue_id', responseBody.results[0].id);",
               "}"
             ]
           }
@@ -1634,10 +1634,10 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Paginated', () => pm.expect(data.results).to.be.an('array'));",
-              "if (data.results.length) {",
-              "    pm.environment.set('tag_id', data.results[0].id);",
+              "const responseBody = pm.response.json();",
+              "pm.test('Paginated', () => pm.expect(responseBody.results).to.be.an('array'));",
+              "if (responseBody.results.length) {",
+              "    pm.environment.set('tag_id', responseBody.results[0].id);",
               "}"
             ]
           }
@@ -1705,9 +1705,9 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "if (data.results.length) {",
-              "    pm.environment.set('feature_id', data.results[0].id);",
+              "const responseBody = pm.response.json();",
+              "if (responseBody.results.length) {",
+              "    pm.environment.set('feature_id', responseBody.results[0].id);",
               "}"
             ]
           }
@@ -1855,9 +1855,9 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "if (data.results.length) {",
-              "    pm.environment.set('review_id', data.results[0].id);",
+              "const responseBody = pm.response.json();",
+              "if (responseBody.results.length) {",
+              "    pm.environment.set('review_id', responseBody.results[0].id);",
               "}"
             ]
           }
@@ -1984,9 +1984,9 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "if (data.results.length) {",
-              "    pm.environment.set('favorite_id', data.results[0].id);",
+              "const responseBody = pm.response.json();",
+              "if (responseBody.results.length) {",
+              "    pm.environment.set('favorite_id', responseBody.results[0].id);",
               "}"
             ]
           }
@@ -2048,9 +2048,9 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "if (data.results.length) {",
-              "    pm.environment.set('news_id', data.results[0].id);",
+              "const responseBody = pm.response.json();",
+              "if (responseBody.results.length) {",
+              "    pm.environment.set('news_id', responseBody.results[0].id);",
               "}"
             ]
           }
@@ -2118,9 +2118,9 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "if (data.results.length) {",
-              "    pm.environment.set('hangout_id', data.results[0].id);",
+              "const responseBody = pm.response.json();",
+              "if (responseBody.results.length) {",
+              "    pm.environment.set('hangout_id', responseBody.results[0].id);",
               "}"
             ]
           }
@@ -2188,10 +2188,10 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('List returned', () => pm.expect(data).to.be.an('array'));",
-              "if (data.length) {",
-              "    pm.environment.set('conversation_id', data[0].id);",
+              "const responseBody = pm.response.json();",
+              "pm.test('List returned', () => pm.expect(responseBody).to.be.an('array'));",
+              "if (responseBody.length) {",
+              "    pm.environment.set('conversation_id', responseBody[0].id);",
               "}"
             ]
           }
@@ -2223,8 +2223,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('Counter returned', () => pm.expect(data.unread_total).to.be.a('number'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('Counter returned', () => pm.expect(responseBody.unread_total).to.be.a('number'));"
             ]
           }
         }
@@ -2286,8 +2286,8 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "pm.test('List returned', () => pm.expect(data).to.be.an('array'));"
+              "const responseBody = pm.response.json();",
+              "pm.test('List returned', () => pm.expect(responseBody).to.be.an('array'));"
             ]
           }
         }
@@ -2352,9 +2352,9 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "if (data.results.length) {",
-              "    pm.environment.set('page_slug', data.results[0].slug);",
+              "const responseBody = pm.response.json();",
+              "if (responseBody.results.length) {",
+              "    pm.environment.set('page_slug', responseBody.results[0].slug);",
               "}"
             ]
           }
@@ -2422,9 +2422,9 @@
             "exec": [
               "pm.test('Status 200', () => pm.expect([200]).to.include(pm.response.code));",
               "",
-              "const data = pm.response.json();",
-              "if (data.results.length) {",
-              "    pm.environment.set('top_category_id', data.results[0].id);",
+              "const responseBody = pm.response.json();",
+              "if (responseBody.results.length) {",
+              "    pm.environment.set('top_category_id', responseBody.results[0].id);",
               "}"
             ]
           }
