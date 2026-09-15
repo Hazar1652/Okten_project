@@ -4,7 +4,7 @@ from rest_framework.generics import ListCreateAPIView
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from apps.common.permissions import VenueObjectPermission
+from apps.venues.permissions import VenueObjectPermission
 from apps.venues.filters import SafeOrderingFilter, VenueFilter
 from apps.venues.serializers import VenueSerializer, VenueWriteSerializer
 from apps.venues.services import get_venues_queryset

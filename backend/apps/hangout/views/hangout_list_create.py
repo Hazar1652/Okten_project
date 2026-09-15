@@ -3,7 +3,7 @@ from rest_framework import generics
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
-from apps.common.permissions import HangoutObjectPermission
+from apps.hangout.permissions import HangoutObjectPermission
 from apps.hangout.filters import HangoutFilter
 from apps.hangout.serializers import HangoutListSerializer, HangoutRequestSerializer
 from apps.hangout.services import get_hangouts_queryset

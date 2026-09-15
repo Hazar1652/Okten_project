@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from apps.common.permissions import HangoutObjectPermission
+from apps.hangout.permissions import HangoutObjectPermission
 from apps.hangout.serializers import HangoutRequestSerializer
 from apps.hangout.services import cancel_hangout, get_hangouts_queryset
 

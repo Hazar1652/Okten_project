@@ -3,7 +3,7 @@ from .oauth import (
     GoogleAuthSerializer,
     OAuthLoginResponseSerializer,
 )
-from .register import RegisterSerializer
+from .register import RegisterResponseSerializer, RegisterSerializer
 from .user import UserAdminSerializer, UserMeSerializer, UserSerializer
 
 __all__ = [
@@ -11,6 +11,7 @@ __all__ = [
     "UserMeSerializer",
     "UserAdminSerializer",
     "RegisterSerializer",
+    "RegisterResponseSerializer",
     "GoogleAuthSerializer",
     "FacebookAuthSerializer",
     "OAuthLoginResponseSerializer",
