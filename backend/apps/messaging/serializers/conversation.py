@@ -153,3 +153,10 @@ class ConversationCreateSerializer(serializers.Serializer):
             ]
         )
         return conversation
+
+    def to_representation(self, instance):
+        from apps.messaging.services import get_user_conversations
+
+        user = self.context["request"].user
+        conversation = get_user_conversations(user).get(pk=instance.pk)
+        return ConversationSerializer(conversation, context=self.context).data

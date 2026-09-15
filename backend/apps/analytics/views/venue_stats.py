@@ -1,17 +1,18 @@
-from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import OpenApiParameter, extend_schema
-from rest_framework import status
+from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from apps.analytics.services import get_venue_stats
-from apps.common.permissions import is_super_admin
+from apps.venues.permissions import VenueOwnerOrSuperAdmin
 from apps.venues.models import Venue
-from core.schema import VenueStatsSerializer
+from apps.analytics.serializers import VenueStatsSerializer
 
-class VenueStatsView(APIView):
-    permission_classes = [IsAuthenticated]
+
+class VenueStatsView(GenericAPIView):
+    permission_classes = [IsAuthenticated, VenueOwnerOrSuperAdmin]
+    queryset = Venue.objects.all()
+    lookup_url_kwarg = "venue_id"
 
     @extend_schema(
         parameters=[
@@ -21,12 +22,7 @@ class VenueStatsView(APIView):
         responses={200: VenueStatsSerializer},
     )
     def get(self, request, venue_id):
-        venue = get_object_or_404(Venue, pk=venue_id)
-        if not is_super_admin(request.user) and venue.owner_id != request.user.id:
-            return Response(
-                {"detail": "Немає доступу до статистики цього закладу."},
-                status=status.HTTP_403_FORBIDDEN,
-            )
+        venue = self.get_object()
         data = get_venue_stats(
             venue,
             date_from_str=request.query_params.get("from"),

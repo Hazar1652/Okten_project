@@ -25,7 +25,7 @@ docker compose up --build
 | Swagger | http://localhost/api/docs/ |
 | Health | http://localhost/api/health/ |
 
-Локальний контейнер Postgres **не** використовується — БД лише хмарна (`POSTGRES_*` у `.env`).
+Локальний контейнер Postgres **не** використовується — БД лише хмарна (`POSTGRES_*` у `backend/.env`).
 
 ---
 
@@ -35,12 +35,12 @@ docker compose up --build
 ├── docker-compose.yml
 ├── backend/
 │   ├── configs/
-│   │   ├── settings/     # base.py, local.py, production.py
+│   │   ├── settings/     # base.py, local.py, production.py, test.py
 │   │   ├── urls.py
 │   │   ├── wsgi.py
 │   │   └── asgi.py
-│   ├── apps/             # users, venues, … → views/, serializers/, services/
-│   ├── core/
+│   ├── apps/             # users, venues, … → urls, views/, serializers/, services/, permissions.py
+│   ├── core/             # health (+ schema)
 │   └── requirements.txt
 ├── frontend/
 ├── infra/nginx/
@@ -48,7 +48,7 @@ docker compose up --build
 └── README.md
 ```
 
-Settings: локально `configs.settings.local`, у Docker — `configs.settings.production`.
+Settings: локально `configs.settings.local`, у Docker — `configs.settings.production`, тести — `configs.settings.test`.
 
 ---
 
@@ -59,7 +59,6 @@ Settings: локально `configs.settings.local`, у Docker — `configs.sett
 | Змінна | Призначення |
 |--------|-------------|
 | `DJANGO_SECRET_KEY` | Секрет Django |
-| `DJANGO_DEBUG` | `True` / `False` |
 | `POSTGRES_HOST` / `DB` / `USER` / `PASSWORD` / `PORT` | Хмарна PostgreSQL |
 | `POSTGRES_SSLMODE` | Зазвичай `require` для Neon/Supabase |
 | `CORS_ALLOWED_ORIGINS` | Origins фронту |
@@ -73,10 +72,10 @@ Settings: локально `configs.settings.local`, у Docker — `configs.sett
 
 Див. [`postman/README.md`](postman/README.md):
 
-1. Імпорт `postman/Okten_API.postman_collection.json`
+1. Імпорт `postman/Okten.postman_collection.json`
 2. Імпорт `postman/Okten_Local.postman_environment.json`
 3. Оберіть environment **Okten Local**
-4. Register / Login — скрипти самі збережуть `access_token`
+4. `login` / `login_admin` — скрипти збережуть `access_token` у environment
 
 ---
 
@@ -84,7 +83,7 @@ Settings: локально `configs.settings.local`, у Docker — `configs.sett
 
 ```bash
 cd backend
-python manage.py test -v 1
+DJANGO_SETTINGS_MODULE=configs.settings.test python manage.py test -v 1
 ```
 
 CI: [`.github/workflows/ci.yml`](.github/workflows/ci.yml).

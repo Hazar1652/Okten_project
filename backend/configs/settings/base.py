@@ -1,13 +1,8 @@
 import os
-import sys
 from datetime import timedelta
 from pathlib import Path
-from urllib.parse import parse_qs, unquote, urlparse
-
-from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-dev-secret-key")
 
@@ -67,49 +62,22 @@ TEMPLATES = [
 WSGI_APPLICATION = "configs.wsgi.application"
 ASGI_APPLICATION = "configs.asgi.application"
 
-def _database_from_url(url: str) -> dict:
-    parsed = urlparse(url)
-    options = {}
-    query = parse_qs(parsed.query)
-    if "sslmode" in query:
-        options["sslmode"] = query["sslmode"][0]
-    return {
+DATABASES = {
+    "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": (parsed.path or "/").lstrip("/") or "postgres",
-        "USER": unquote(parsed.username or ""),
-        "PASSWORD": unquote(parsed.password or ""),
-        "HOST": parsed.hostname or "",
-        "PORT": str(parsed.port or "5432"),
-        "OPTIONS": options,
+        "NAME": os.getenv("POSTGRES_DB", "app_db"),
+        "USER": os.getenv("POSTGRES_USER", "app_user"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "app_pass"),
+        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        "OPTIONS": {},
+        "CONN_MAX_AGE": int(os.getenv("DB_CONN_MAX_AGE", "60")),
+        "CONN_HEALTH_CHECKS": True,
     }
-
-_database_url = os.getenv("DATABASE_URL", "").strip()
-if _database_url:
-    DATABASES = {"default": _database_from_url(_database_url)}
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("POSTGRES_DB", "app_db"),
-            "USER": os.getenv("POSTGRES_USER", "app_user"),
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "app_pass"),
-            "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-            "PORT": os.getenv("POSTGRES_PORT", "5432"),
-            "OPTIONS": {},
-        }
-    }
-    _sslmode = os.getenv("POSTGRES_SSLMODE", "").strip()
-    if _sslmode:
-        DATABASES["default"]["OPTIONS"]["sslmode"] = _sslmode
-
-DATABASES["default"]["CONN_MAX_AGE"] = int(os.getenv("DB_CONN_MAX_AGE", "60"))
-DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
-
-if "test" in sys.argv:
-    DATABASES["default"] = {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "test_db.sqlite3",
-    }
+}
+_sslmode = os.getenv("POSTGRES_SSLMODE", "").strip()
+if _sslmode:
+    DATABASES["default"]["OPTIONS"]["sslmode"] = _sslmode
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

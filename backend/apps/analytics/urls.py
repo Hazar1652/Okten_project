@@ -6,6 +6,6 @@ urlpatterns = [
     path(
         "analytics/venues/<int:venue_id>/stats/",
         VenueStatsView.as_view(),
-        name="venue-stats",
+        name="analytics-venue-stats",
     ),
 ]

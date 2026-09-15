@@ -3,7 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.common.permissions import IsSuperAdmin, VenueObjectPermission
+from apps.common.permissions import IsSuperAdmin
+from apps.venues.permissions import VenueObjectPermission
 from apps.venues.serializers import VenueModerationSerializer, VenueSerializer
 from apps.venues.services import approve_venue, get_venues_queryset
 

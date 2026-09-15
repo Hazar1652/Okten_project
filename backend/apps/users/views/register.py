@@ -3,10 +3,10 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.users.serializers import RegisterSerializer, UserSerializer
-from core.schema import RegisterResponseSerializer
+from apps.users.serializers import RegisterResponseSerializer, RegisterSerializer, UserSerializer
+from apps.users.services import register_user
+
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -15,13 +15,12 @@ class RegisterView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        refresh = RefreshToken.for_user(user)
+        result = register_user(serializer.validated_data)
         return Response(
             {
-                "user": UserSerializer(user).data,
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),
+                "user": UserSerializer(result["user"]).data,
+                "refresh": result["refresh"],
+                "access": result["access"],
             },
             status=status.HTTP_201_CREATED,
         )
